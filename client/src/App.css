@@ -1,0 +1,232 @@
+/* App-level styles with new color palette */
+.home-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.home-hero {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 50%, #00bcd4 100%); /* Dark to Teal gradient */
+  color: white;
+  border-radius: 16px;
+  margin-bottom: 4rem;
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
+  opacity: 0.3;
+}
+
+.home-hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: white;
+  position: relative;
+  z-index: 1;
+  font-weight: 700;
+}
+
+.home-hero p {
+  font-size: 1.5rem;
+  opacity: 0.95;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+}
+
+.home-cta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-button {
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.cta-primary {
+  background: #00bcd4; /* Bright Teal/Cyan */
+  color: white;
+}
+
+.cta-primary:hover {
+  background: #00acc1;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.4);
+}
+
+.cta-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.cta-secondary:hover {
+  background: white;
+  color: #1a1a1a;
+}
+
+.home-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.feature-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
+  transition: all 0.3s;
+  text-align: center;
+  border-top: 4px solid #00bcd4; /* Bright Teal/Cyan */
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(26, 26, 26, 0.2);
+}
+
+.feature-card h3 {
+  color: #1a1a1a; /* Very Dark Slate Gray */
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.feature-card p {
+  color: #4a4a4a; /* Dark Gray */
+  margin: 0;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Home Stats Section */
+.home-stats {
+  background: white;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
+  margin-bottom: 3rem;
+}
+
+.home-stats h2 {
+  text-align: center;
+  color: #1a1a1a; /* Very Dark Slate Gray */
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #00bcd4; /* Bright Teal/Cyan */
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #4a4a4a; /* Dark Gray */
+  font-size: 1rem;
+}
+
+/* Placeholder page styles */
+.placeholder-container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.placeholder-content {
+  background: white;
+  padding: 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.1);
+  text-align: center;
+  max-width: 600px;
+  border-top: 4px solid #00bcd4; /* Bright Teal/Cyan */
+}
+
+.placeholder-content h1 {
+  color: #1a1a1a; /* Very Dark Slate Gray */
+  margin-bottom: 1rem;
+}
+
+.placeholder-content p {
+  color: #4a4a4a; /* Dark Gray */
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.placeholder-note {
+  color: #9e9e9e;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .home-hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .home-hero p {
+    font-size: 1.2rem;
+  }
+
+  .home-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .home-features {
+    grid-template-columns: 1fr;
+  }
+}
