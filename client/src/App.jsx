@@ -5,6 +5,12 @@ import Admin from './pages/Admin.jsx';
 import Profile from './pages/Profile.jsx';
 import Orders from './pages/Orders.jsx';
 import './App.css';
+//add by shalini 
+import React from 'react'
+import Login from './pages/Login.jsx'
+import Signup from './pages/Signup.jsx'
+
+import Cart from './pages/Cart.jsx';
 
 function App() {
   return (
@@ -28,12 +34,12 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           
           {/* Auth pages - will be created by Shalini */}
-          <Route path="/login" element={<PlaceholderPage title="Login" message="Login page will be created by Shalini" />} />
-          <Route path="/signup" element={<PlaceholderPage title="Sign Up" message="Signup page will be created by Shalini" />} />
-          <Route path="/logout" element={<PlaceholderPage title="Logout" message="Logout functionality will be created by Shalini" />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          {/* <Route path="/register" element={<Register />} /> */}
           
           {/* Cart & Checkout - will be created by Shalini */}
-          <Route path="/cart" element={<PlaceholderPage title="Shopping Cart" message="Cart page will be created by Shalini" />} />
+          <Route path='/cart' element={<Cart />} />
           <Route path="/checkout" element={<PlaceholderPage title="Checkout" message="Checkout page will be created by Shalini" />} />
         </Routes>
       </Layout>

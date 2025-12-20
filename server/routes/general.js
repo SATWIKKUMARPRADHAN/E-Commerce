@@ -2,7 +2,7 @@
 // TODO: Replace dummy data with MongoDB queries after connecting database
 
 import express from 'express';
-import { dummyUsers, dummyProducts, dummyOrders } from './data.js';
+import { dummyUsers, dummyProducts, dummyOrders } from '../data.js';
 
 const router = express.Router();
 
