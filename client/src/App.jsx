@@ -7,10 +7,10 @@ import Orders from './pages/Orders.jsx';
 import './App.css';
 //add by shalini 
 import React from 'react'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import Register from './pages/Register';
-import Cart from './pages/Cart';
+import Login from './pages/Login.jsx'
+import Signup from './pages/Signup.jsx'
+
+import Cart from './pages/Cart.jsx';
 
 function App() {
   return (

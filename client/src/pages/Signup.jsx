@@ -1,6 +1,6 @@
 import React, { useState} from 'react'
 import axios from 'axios';
- import Navbar from '../components/layout/Navbar';
+//  import Navbar from '../components/layout/Navbar';
 
 export default function Signup() {
     const [formData, setFormData] = useState({
@@ -70,7 +70,7 @@ export default function Signup() {
     }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-200 via-white to-purple-200">
-    <Navbar /> 
+    {/* <Navbar /> */}
     <div className="bg-white shadow-2xl rounded-xl p-10 m-5 w-full max-w-md border border-gray-200">
     <h2 className="text-3xl font-bold text-gray-800 text-center mb-6 tracking-wide">
       Create Your Jenz Fashion Account

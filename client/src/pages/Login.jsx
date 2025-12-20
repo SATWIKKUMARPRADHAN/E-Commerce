@@ -59,7 +59,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-pink-100 via-white to-purple-100">
-      <Navbar />
+      {/* <Navbar /> */}
   <div className="bg-white shadow-xl rounded-xl p-10 w-full max-w-md border border-gray-200">
     <h1 className="text-3xl font-bold text-gray-800 text-center mb-6 tracking-wide">
       Jenz Fashion ✨
