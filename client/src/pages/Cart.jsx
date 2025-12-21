@@ -13,7 +13,7 @@ const Cart = () => {
   const userId = user ? user._id : null; 
 
   const topay = () => {
-    navigate('/payment');
+    navigate('/checkout');
   }
 
   useEffect(()=>{

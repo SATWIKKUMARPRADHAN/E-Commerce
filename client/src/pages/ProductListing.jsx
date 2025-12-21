@@ -6,21 +6,21 @@ import './ProductListing.css';
 
 const ProductListing = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [products, setProducts] = useState([]); // Store all products
+    const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortBy, setSortBy] = useState('featured');
     const [loading, setLoading] = useState(true);
 
-    // Get category and search from URL
     const categoryParam = searchParams.get('category');
     const searchParam = searchParams.get('search');
 
     useEffect(() => {
         const fetchProducts = async () => {
+            setLoading(true); // Ensure loading is true on mount
             try {
                 const data = await getAllProducts();
                 setProducts(data);
-                setFilteredProducts(data); // Initial set
+                // Don't set filteredProducts here; let the next useEffect handle it
             } catch (error) {
                 console.error("Error fetching products:", error);
             } finally {
@@ -31,26 +31,27 @@ const ProductListing = () => {
     }, []);
 
     useEffect(() => {
-        if (products.length === 0) return;
+        // If still loading, don't run filter logic yet
+        if (loading) return;
 
         let result = [...products];
 
-        // Filter by category
+        // 1. Filter by Category (Safe check)
         if (categoryParam) {
-            result = result.filter(p => p.category.toLowerCase() === categoryParam.toLowerCase());
+            result = result.filter(p => p.category?.toLowerCase() === categoryParam.toLowerCase());
         }
 
-        // Filter by Search Query
+        // 2. Filter by Search (Safe check for null values)
         if (searchParam) {
             const query = searchParam.toLowerCase();
             result = result.filter(p =>
-                p.name.toLowerCase().includes(query) ||
-                p.brand.toLowerCase().includes(query) ||
-                p.category.toLowerCase().includes(query)
+                (p.name?.toLowerCase() || "").includes(query) ||
+                (p.brand?.toLowerCase() || "").includes(query) ||
+                (p.category?.toLowerCase() || "").includes(query)
             );
         }
 
-        // Sort
+        // 3. Sort
         if (sortBy === 'price-low-high') {
             result.sort((a, b) => a.price - b.price);
         } else if (sortBy === 'price-high-low') {
@@ -58,23 +59,36 @@ const ProductListing = () => {
         } else if (sortBy === 'rating') {
             result.sort((a, b) => b.rating - a.rating);
         }
-        // 'featured' is default order (id)
 
         setFilteredProducts(result);
-    }, [categoryParam, searchParam, sortBy, products]);
+    }, [categoryParam, searchParam, sortBy, products, loading]);
 
     const handleCategoryChange = (category) => {
+        const newParams = {};
+        // Optional: Keep search param if you want? 
+        // if (searchParam) newParams.search = searchParam;
+        
         if (category) {
-            setSearchParams({ category: category.toLowerCase() });
-        } else {
-            setSearchParams({});
+            newParams.category = category.toLowerCase();
         }
+        setSearchParams(newParams);
     };
+
+    // ✅ FIX 2: Loading State
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center text-white">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ccff00]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="product-listing-container">
             <div className="listing-header">
-                <h1 className="text-gradient-neon">{categoryParam ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}` : 'All Products'}</h1>
+                <h1 className="text-gradient-neon">
+                    {categoryParam ? `${categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)}` : 'All Products'}
+                </h1>
                 <p>{filteredProducts.length} items found</p>
             </div>
 
@@ -117,7 +131,8 @@ const ProductListing = () => {
                     {filteredProducts.length > 0 ? (
                         <div className="products-grid">
                             {filteredProducts.map(product => (
-                                <ProductCard key={product.id} product={product} />
+                                // ✅ FIX 1: Use _id for MongoDB compatibility
+                                <ProductCard key={product._id} product={product} />
                             ))}
                         </div>
                     ) : (
