@@ -2,9 +2,63 @@
 import express from 'express';
 import { dummyUsers, dummyOrders } from '../data.js'; // product dummy data removed
 import Product from '../model/Product.js';
-// import User from '../model/User.js'; // Uncomment when fully switching User/Order to DB
+import User from '../model/User.js';
 
 const router = express.Router();
+
+// Authentication Routes
+// Signup Route
+router.post('/signup', async (req, res) => {
+  try {
+    const { name, mobile, email, password } = req.body;
+
+    // Check if user already exists
+    const existUser = await User.findOne({ $or: [{ email: email }, { mobile: mobile }] });
+    if (existUser) {
+      return res.status(400).json({ message: "user already exist" });
+    }
+
+    // Create new user
+    const newUser = await User.create({ name, mobile, email, password });
+    res.status(201).json({
+      message: "user registered successfully",
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+});
+
+// Login Route
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    res.json({
+      message: "Login successful",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+});
 
 // Admin Dashboard API
 router.get('/admin/dashboard', async (req, res) => {
@@ -39,11 +93,11 @@ router.get('/admin/dashboard', async (req, res) => {
   }
 });
 
-// User Profile API (Partial Dummy)
-router.get('/user/profile', (req, res) => {
+// User Profile API
+router.get('/user/profile/:id', async (req, res) => {
   try {
-    const userId = '1';
-    const user = dummyUsers.find(u => u._id === userId);
+    const { id } = req.params;
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -52,13 +106,56 @@ router.get('/user/profile', (req, res) => {
     res.json({
       name: user.name,
       email: user.email,
-      phone: user.phone,
-      address: user.address,
+      mobile: user.mobile,
+      address: user.address || {},
       createdAt: user.createdAt,
-      lastLogin: user.lastLogin
+      lastLogin: user.updatedAt
     });
   } catch (error) {
+    console.error("Profile Fetch Error:", error);
     res.status(500).json({ error: 'Failed to fetch user profile' });
+  }
+});
+
+// Update User Profile API
+router.put('/user/profile/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, mobile, address } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.mobile = mobile || user.mobile;
+
+    if (address) {
+      user.address = {
+        street: address.street || user.address?.street,
+        city: address.city || user.address?.city,
+        state: address.state || user.address?.state,
+        zipCode: address.zipCode || user.address?.zipCode
+      };
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      message: "Profile updated successfully",
+      user: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        mobile: updatedUser.mobile,
+        address: updatedUser.address
+      }
+    });
+  } catch (error) {
+    console.error("Profile Update Error:", error);
+    res.status(500).json({ error: 'Failed to update profile' });
   }
 });
 

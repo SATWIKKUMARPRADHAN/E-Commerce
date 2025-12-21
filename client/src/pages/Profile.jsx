@@ -1,7 +1,6 @@
-// User Profile Page
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserProfile } from '../api.js';
+import { getUserProfile, updateUserProfile } from '../api.js';
 import './Profile.css';
 
 function Profile() {
@@ -9,6 +8,8 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')));
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,22 +21,27 @@ function Profile() {
   });
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (currentUser && currentUser._id) {
+      fetchProfile(currentUser._id);
+    } else {
+      setLoading(false);
+      setError("Please login to view profile");
+    }
+  }, [currentUser]);
 
-  const fetchProfile = async () => {
+  const fetchProfile = async (userId) => {
     try {
       setLoading(true);
-      const data = await getUserProfile();
+      const data = await getUserProfile(userId);
       setProfile(data);
       setFormData({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        street: data.address.street,
-        city: data.address.city,
-        state: data.address.state,
-        zipCode: data.address.zipCode
+        name: data.name || '',
+        email: data.email || '',
+        phone: data.phone || '', // mapped from mobile
+        street: data.address?.street || '',
+        city: data.address?.city || '',
+        state: data.address?.state || '',
+        zipCode: data.address?.zipCode || ''
       });
       setError(null);
     } catch (err) {
@@ -54,26 +60,46 @@ function Profile() {
   };
 
   const handleSave = async () => {
-    // TODO: Implement API call to update profile
-    // await updateUserProfile(formData);
-    alert('Profile update functionality will be integrated with backend API');
-    setIsEditing(false);
-    // Refresh profile data
-    fetchProfile();
+    try {
+      await updateUserProfile(currentUser._id, {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: {
+          street: formData.street,
+          city: formData.city,
+          state: formData.state,
+          zipCode: formData.zipCode
+        }
+      });
+      alert('Profile updated successfully!');
+      setIsEditing(false);
+      fetchProfile(currentUser._id);
+
+      // Update local storage name if changed
+      if (formData.name !== currentUser.name) {
+        const updatedUser = { ...currentUser, name: formData.name };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('storage')); // Notify Layout
+      }
+
+    } catch (err) {
+      alert(err.message);
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset form data
+    // Reset form data to current profile
     if (profile) {
       setFormData({
-        name: profile.name,
-        email: profile.email,
-        phone: profile.phone,
-        street: profile.address.street,
-        city: profile.address.city,
-        state: profile.address.state,
-        zipCode: profile.address.zipCode
+        name: profile.name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+        street: profile.address?.street || '',
+        city: profile.address?.city || '',
+        state: profile.address?.state || '',
+        zipCode: profile.address?.zipCode || ''
       });
     }
   };
@@ -118,9 +144,6 @@ function Profile() {
           <div className="sidebar-menu">
             <Link to="/profile" className="sidebar-item active">
               <span>👤</span> Profile
-            </Link>
-            <Link to="/orders" className="sidebar-item">
-              <span>📦</span> Orders
             </Link>
             <Link to="/wishlist" className="sidebar-item">
               <span>❤️</span> Wishlist
@@ -243,18 +266,18 @@ function Profile() {
               <div className="info-grid">
                 <div className="info-item">
                   <label>Member Since</label>
-                  <p>{new Date(profile.createdAt).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  <p>{new Date(profile.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                   })}</p>
                 </div>
                 <div className="info-item">
                   <label>Last Login</label>
-                  <p>{new Date(profile.lastLogin).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
+                  <p>{new Date(profile.lastLogin).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
                   })}</p>
                 </div>
               </div>

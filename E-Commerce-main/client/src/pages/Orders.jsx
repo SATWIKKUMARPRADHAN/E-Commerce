@@ -1,14 +1,15 @@
-// Order History Page
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getUserOrders } from '../api.js';
-import './Orders.css';
+import { getUserOrders } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 function Orders() {
+  const { user } = useAuth();
+  const userId = user?._id;
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState('all'); // all, pending, processing, shipped, delivered
 
   useEffect(() => {
     if (userId) {
@@ -21,13 +22,13 @@ function Orders() {
       setLoading(true);
       const data = await getUserOrders(userId);
       setOrders(data);
-      setError(null);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
+
 
   const filteredOrders = filter === 'all'
     ? orders

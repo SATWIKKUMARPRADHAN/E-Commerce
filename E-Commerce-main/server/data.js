@@ -6,13 +6,7 @@ export const dummyUsers = [
     _id: '1',
     name: 'John Doe',
     email: 'john@example.com',
-    phone: '+1234567890',
-    address: {
-      street: '123 Main St',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001'
-    },
+    mobile: '1234567890',
     createdAt: new Date('2024-01-15'),
     lastLogin: new Date('2024-12-10')
   },
@@ -20,13 +14,7 @@ export const dummyUsers = [
     _id: '2',
     name: 'Jane Smith',
     email: 'jane@example.com',
-    phone: '+1234567891',
-    address: {
-      street: '456 Oak Ave',
-      city: 'Los Angeles',
-      state: 'CA',
-      zipCode: '90001'
-    },
+    mobile: '1234567891',
     createdAt: new Date('2024-02-20'),
     lastLogin: new Date('2024-12-09')
   },
@@ -34,13 +22,7 @@ export const dummyUsers = [
     _id: '3',
     name: 'Bob Johnson',
     email: 'bob@example.com',
-    phone: '+1234567892',
-    address: {
-      street: '789 Pine Rd',
-      city: 'Chicago',
-      state: 'IL',
-      zipCode: '60601'
-    },
+    mobile: '1234567892',
     createdAt: new Date('2024-03-10'),
     lastLogin: new Date('2024-12-08')
   }

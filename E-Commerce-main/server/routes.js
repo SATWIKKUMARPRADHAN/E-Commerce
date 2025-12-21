@@ -63,13 +63,59 @@ router.get('/user/profile', (req, res) => {
     res.json({
       name: user.name,
       email: user.email,
-      phone: user.phone,
-      address: user.address,
+      mobile: user.mobile,
       createdAt: user.createdAt,
       lastLogin: user.lastLogin
     });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch user profile' });
+  }
+});
+
+// Update User Profile API
+// PUT /api/user/profile
+// TODO: Use real userId from authentication token
+router.put('/user/profile', (req, res) => {
+  try {
+    // TODO: Replace with MongoDB query:
+    // const userId = req.user.id; // from authentication middleware
+    // const user = await User.findByIdAndUpdate(userId, req.body, { new: true });
+
+    const userId = '1'; // Dummy userId - replace with actual auth
+    const { name, email, mobile } = req.body;
+
+    // Validate input
+    if (!name || !email || !mobile) {
+      return res.status(400).json({ error: 'Name, email, and mobile are required' });
+    }
+
+    // Find user in dummy data
+    const userIndex = dummyUsers.findIndex(u => u._id === userId);
+
+    if (userIndex === -1) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Update user data
+    dummyUsers[userIndex] = {
+      ...dummyUsers[userIndex],
+      name,
+      email,
+      mobile
+    };
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        name: dummyUsers[userIndex].name,
+        email: dummyUsers[userIndex].email,
+        mobile: dummyUsers[userIndex].mobile,
+        createdAt: dummyUsers[userIndex].createdAt,
+        lastLogin: dummyUsers[userIndex].lastLogin
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update user profile' });
   }
 });
 

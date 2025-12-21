@@ -52,12 +52,13 @@ router.get('/user/profile', (req, res) => {
     res.json({
       name: user.name,
       email: user.email,
-      phone: user.phone,
-      address: user.address,
+      phone: user.mobile,
+      address: user.address || {},
       createdAt: user.createdAt,
-      lastLogin: user.lastLogin
+      lastLogin: user.updatedAt // Using updatedAt as proxy for now
     });
   } catch (error) {
+    console.error("Profile Fetch Error:", error);
     res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 });
@@ -80,6 +81,7 @@ router.get('/user/orders', (req, res) => {
 
     res.json(orders);
   } catch (error) {
+    console.error("Fetch Orders Error:", error);
     res.status(500).json({ error: 'Failed to fetch orders' });
   }
 });

@@ -12,6 +12,25 @@ const api = axios.create({
   }
 });
 
+// Auth APIs
+export const login = async (credentials) => {
+  try {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Login failed');
+  }
+};
+
+export const signup = async (userData) => {
+  try {
+    const response = await api.post('/auth/signup', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Signup failed');
+  }
+};
+
 // Admin Dashboard API
 export const getAdminDashboard = async () => {
   try {
@@ -23,12 +42,22 @@ export const getAdminDashboard = async () => {
 };
 
 // User Profile API
-export const getUserProfile = async () => {
+// User Profile API
+export const getUserProfile = async (userId) => {
   try {
-    const response = await api.get('/user/profile');
+    const response = await api.get(`/user/profile/${userId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || 'Failed to fetch user profile');
+  }
+};
+
+export const updateUserProfile = async (userId, data) => {
+  try {
+    const response = await api.put(`/user/profile/${userId}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || 'Failed to update profile');
   }
 };
 
