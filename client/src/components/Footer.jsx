@@ -8,7 +8,7 @@ import { Pointer } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <div className="container-fluid p-3" style={{boxShadow:'0 0px 5px yellow'}}>
+    <div className="container-fluid p-3" style={{boxShadow:'0 0px 5px yellow', borderRadius: '5px'}}>
       <div className="row p-4" style={{ backgroundColor: '#0a0a0adc' }}>
         
         <div className="col text-white">
