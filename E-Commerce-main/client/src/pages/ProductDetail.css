@@ -1,0 +1,142 @@
+.product-detail-container {
+    padding: 2rem 0;
+}
+
+.product-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.main-image {
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background-color: #f8f9fa;
+    object-fit: cover;
+    aspect-ratio: 1;
+}
+
+.product-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-category {
+    color: #6c757d;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.detail-title {
+    font-size: 2.25rem;
+    color: #1a1a1a;
+    margin: 0 0 1rem 0;
+    line-height: 1.2;
+}
+
+.detail-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.review-count {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.detail-price-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #282c3f;
+}
+
+.detail-original-price {
+    font-size: 1.2rem;
+    color: #7e818c;
+    text-decoration: line-through;
+}
+
+.detail-discount {
+    font-size: 1.2rem;
+    color: #ff905a;
+    font-weight: 600;
+}
+
+.stock-status {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.detail-description {
+    color: #4a5568;
+    line-height: 1.7;
+    font-size: 1.05rem;
+    margin-bottom: 2rem;
+}
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.add-to-cart-btn {
+    flex: 2;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.wishlist-action-btn {
+    flex: 1;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+.product-meta {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.meta-item {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-label {
+    width: 100px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.meta-value {
+    color: #212529;
+}
+
+@media (max-width: 768px) {
+    .product-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
