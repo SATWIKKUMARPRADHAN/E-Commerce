@@ -11,7 +11,9 @@ const Cart = () => {
 
   const user = JSON.parse(localStorage.getItem('user')); //from local storeage
   const userId = user ? user._id : null; 
-
+  const topay = () => {
+    navigate('/payment');
+  }
   useEffect(()=>{
     if(!userId && !alertShown.current){
     alertShown.current = true;
@@ -127,7 +129,7 @@ const Cart = () => {
             <span className="text-[#ccff00]">₹{total + (subtotal * 0.18)}</span>
           </div>
 
-          <button className="w-full py-4 bg-[#ccff00] text-black font-bold uppercase tracking-wider hover:bg-[#b3e600] transition flex justify-center items-center gap-2">
+          <button className="w-full py-4 bg-[#ccff00] text-black font-bold uppercase tracking-wider hover:bg-[#b3e600] transition flex justify-center items-center gap-2" onClick={topay}>
             Checkout <ArrowRight size={20} />
           </button>
 
