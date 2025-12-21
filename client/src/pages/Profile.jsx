@@ -148,8 +148,8 @@ function Profile() {
             <Link to="/wishlist" className="sidebar-item">
               <span>❤️</span> Wishlist
             </Link>
-            <Link to="/logout" className="sidebar-item">
-              <span>🚪</span> Logout
+            <Link to="/order-track" className="sidebar-item">
+              <span>🗺️</span> Track Order
             </Link>
           </div>
         </div>

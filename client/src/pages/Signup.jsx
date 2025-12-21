@@ -47,7 +47,7 @@ export default function Signup() {
         }
 
         try {
-            const res = await axios.post('http://localhost:3030/signup', {
+            const res = await axios.post('http://localhost:3030/api/auth/signup', {
                 name: formData.name,
                 mobile: formData.mobile,
                 email: formData.email,
