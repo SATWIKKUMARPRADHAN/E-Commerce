@@ -11,6 +11,15 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 
 import Cart from './pages/Cart.jsx';
+import OrderTracking from './pages/OrderTracking.jsx';
+import Footer from './components/Footer.jsx';
+//adding FooterComponents
+import AboutUs from './footerComponents/AboutUs.jsx';
+import ContactUs from './footerComponents/ContactUs.jsx';
+import Help from './footerComponents/Help.jsx';
+import EarnWithUs from './footerComponents/EarnWithUs.jsx';
+import PrivacyPolicy from './footerComponents/PrivacyPolicy.jsx';
+import TermsOfService from './footerComponents/TermsOfService.jsx';
 
 function App() {
   return (
@@ -38,6 +47,16 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           {/* <Route path="/register" element={<Register />} /> */}
           
+          <Route path="/order-track" element={<OrderTracking />} />
+
+          {/* footer element added by Shalini */}
+          <Route path='/aboutUs' element={<AboutUs />} />
+          <Route path='/contactUs' element={<ContactUs />} />
+          <Route path="/help" element={<Help />} />
+          <Route path='/earnWithUs' element={<EarnWithUs />} />
+          <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+          <Route path='/terms-of-service' element={<TermsOfService />} />
+
           {/* Cart & Checkout - will be created by Shalini */}
           <Route path='/cart' element={<Cart />} />
           <Route path="/checkout" element={<PlaceholderPage title="Checkout" message="Checkout page will be created by Shalini" />} />
@@ -52,7 +71,7 @@ function Home() {
   return (
     <div className="home-container">
       <div className="home-hero">
-        <h1>Welcome to Our E-Commerce Store</h1>
+        <h1>Welcome to HYPERRUSH</h1>
         <p>Discover amazing products at unbeatable prices</p>
         <div className="home-cta">
           <a href="/products" className="cta-button cta-primary">Shop Now</a>
@@ -104,6 +123,7 @@ function Home() {
           <p>Track your orders in real-time with our reliable delivery service</p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
