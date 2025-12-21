@@ -6,6 +6,12 @@ import Profile from './pages/Profile.jsx';
 import Orders from './pages/Orders.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import './App.css';
+
+// add by priyanshu
+import ProductListing from './pages/ProductListing.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
+import Wishlist from './pages/Wishlist.jsx';
+
 //add by shalini 
 import React from 'react'
 import Login from './pages/Login.jsx'
@@ -33,10 +39,11 @@ function App() {
             <Route path="/" element={<Home />} />
             
             {/* Product pages - will be created by Priyanshu */}
-            <Route path="/products" element={<PlaceholderPage title="Products" message="Product listing page will be created by Priyanshu" />} />
-            <Route path="/products/:id" element={<PlaceholderPage title="Product Details" message="Product detail page will be created by Priyanshu" />} />
-            <Route path="/wishlist" element={<PlaceholderPage title="Wishlist" message="Wishlist page will be created by Priyanshu" />} />
-            
+            <Route path="/products" element={<ProductListing />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+
+
             {/* User account pages - Satwik's work */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/orders" element={<Orders />} />

@@ -1,7 +1,8 @@
 // Axios configuration for API calls
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Direct connection to backend (proxy not working)
+const API_BASE_URL = 'http://localhost:3030/api';
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -32,12 +33,77 @@ export const getUserProfile = async () => {
 };
 
 // Order History API
-export const getUserOrders = async () => {
+export const getUserOrders = async (userId) => {
   try {
-    const response = await api.get('/user/orders');
+    const response = await api.get(`/orders/user/${userId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || 'Failed to fetch orders');
+    throw new Error(error.response?.data?.message || 'Failed to fetch orders');
+  }
+};
+
+export const placeOrder = async (orderData) => {
+  try {
+    const response = await api.post('/orders/place', orderData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to place order');
+  }
+};
+
+// Product API
+export const getAllProducts = async () => {
+  try {
+    const response = await api.get('/products');
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch products');
+  }
+};
+
+export const getProductById = async (id) => {
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch product details');
+  }
+};
+
+// Cart API
+export const getCart = async (userId) => {
+  try {
+    const response = await api.get(`/cart/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to fetch cart');
+  }
+};
+
+export const addToCart = async (cartData) => {
+  try {
+    const response = await api.post('/cart/add', cartData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to add to cart');
+  }
+};
+
+export const updateCartQty = async (updateData) => {
+  try {
+    const response = await api.put('/cart/update-qty', updateData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to update quantity');
+  }
+};
+
+export const removeFromCart = async (userId, productId) => {
+  try {
+    const response = await api.delete(`/cart/remove/${userId}/${productId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Failed to remove item');
   }
 };
 
