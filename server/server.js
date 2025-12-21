@@ -6,7 +6,10 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import User from './model/User.js'
 import generalRoutes from './routes/general.js'; 
+// import Product from './model/Product.js';
 import cartRoutes from './routes/cart.js';
+import orderRoutes from './routes/order.js';
+
 import track from './routes/track.js';
 import mongoose from 'mongoose';
 // import { connectDB } from './db.js'; // Uncomment when MongoDB is ready
@@ -28,6 +31,9 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api', generalRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/track', track);
+app.use('/api/orders', orderRoutes);
+
+
 
 //login and signup routes
 app.post('/signup', async(req, res)=>{
