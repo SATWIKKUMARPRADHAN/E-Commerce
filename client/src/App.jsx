@@ -4,7 +4,14 @@ import Layout from './components/Layout.jsx';
 import Admin from './pages/Admin.jsx';
 import Profile from './pages/Profile.jsx';
 import Orders from './pages/Orders.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
 import './App.css';
+
+// add by priyanshu
+import ProductListing from './pages/ProductListing.jsx';
+import ProductDetail from './pages/ProductDetail.jsx';
+import Wishlist from './pages/Wishlist.jsx';
+
 //add by shalini 
 import React from 'react'
 import Login from './pages/Login.jsx'
@@ -12,6 +19,7 @@ import Signup from './pages/Signup.jsx'
 
 import Cart from './pages/Cart.jsx';
 import OrderTracking from './pages/OrderTracking.jsx';
+import Payment from './pages/Payement.jsx';
 import Footer from './components/Footer.jsx';
 //adding FooterComponents
 import AboutUs from './footerComponents/AboutUs.jsx';
@@ -23,46 +31,51 @@ import TermsOfService from './footerComponents/TermsOfService.jsx';
 
 function App() {
   return (
-    <Router>
-      <Layout>
-        <Routes>
-          {/* Home page - will be created by Priyanshu */}
-          <Route path="/" element={<Home />} />
-          
-          {/* Product pages - will be created by Priyanshu */}
-          <Route path="/products" element={<PlaceholderPage title="Products" message="Product listing page will be created by Priyanshu" />} />
-          <Route path="/products/:id" element={<PlaceholderPage title="Product Details" message="Product detail page will be created by Priyanshu" />} />
-          <Route path="/wishlist" element={<PlaceholderPage title="Wishlist" message="Wishlist page will be created by Priyanshu" />} />
-          
-          {/* User account pages - Satwik's work */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/orders/:id" element={<PlaceholderPage title="Order Tracking" message="Order tracking page will be created by Shalini" />} />
-          
-          {/* Admin page - Satwik's work */}
-          <Route path="/admin" element={<Admin />} />
-          
-          {/* Auth pages - will be created by Shalini */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          {/* <Route path="/register" element={<Register />} /> */}
-          
-          <Route path="/order-track" element={<OrderTracking />} />
+    <AuthProvider>
+      <Router>
+        <Layout>
+          <Routes>
+            {/* Home page - will be created by Priyanshu */}
+            <Route path="/" element={<Home />} />
+            
+            {/* Product pages - will be created by Priyanshu */}
+            <Route path="/products" element={<ProductListing />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
+            <Route path="/wishlist" element={<Wishlist />} />
 
-          {/* footer element added by Shalini */}
-          <Route path='/aboutUs' element={<AboutUs />} />
-          <Route path='/contactUs' element={<ContactUs />} />
-          <Route path="/help" element={<Help />} />
-          <Route path='/earnWithUs' element={<EarnWithUs />} />
-          <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-          <Route path='/terms-of-service' element={<TermsOfService />} />
 
-          {/* Cart & Checkout - will be created by Shalini */}
-          <Route path='/cart' element={<Cart />} />
-          <Route path="/checkout" element={<PlaceholderPage title="Checkout" message="Checkout page will be created by Shalini" />} />
-        </Routes>
-      </Layout>
-    </Router>
+            {/* User account pages - Satwik's work */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/orders/:id" element={<PlaceholderPage title="Order Tracking" message="Order tracking page will be created by Shalini" />} />
+            
+            {/* Admin page - Satwik's work */}
+            <Route path="/admin" element={<Admin />} />
+            
+            {/* Auth pages - will be created by Shalini */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            {/* <Route path="/register" element={<Register />} /> */}
+            
+            <Route path="/order-track" element={<OrderTracking />} />
+            <Route path="/payment" element={<Payment />}  />
+
+            {/* footer element added by Shalini */}
+            <Route path='/aboutUs' element={<AboutUs />} />
+            <Route path='/contactUs' element={<ContactUs />} />
+            <Route path="/help" element={<Help />} />
+            <Route path='/earnWithUs' element={<EarnWithUs />} />
+            <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+            <Route path='/terms-of-service' element={<TermsOfService />} />
+
+
+            {/* Cart & Checkout - will be created by Shalini */}
+            <Route path='/cart' element={<Cart />} />
+            <Route path="/checkout" element={<PlaceholderPage title="Checkout" message="Checkout page will be created by Shalini" />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </AuthProvider>
   );
 }
 

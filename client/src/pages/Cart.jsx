@@ -1,30 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { Trash2, Plus, Minus, ArrowRight } from "lucide-react"; // npm install lucide-react
+import { Trash2, Plus, Minus, ArrowRight } from "lucide-react"; 
 import { useNavigate } from "react-router-dom";
-
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
   const alertShown = useRef(false);
 
-  const user = JSON.parse(localStorage.getItem('user')); //from local storeage
+  // Safely get user (handle case where user is null)
+  const user = JSON.parse(localStorage.getItem('user'));
   const userId = user ? user._id : null; 
+
+  const topay = () => {
+    navigate('/payment');
+  }
 
   useEffect(()=>{
     if(!userId && !alertShown.current){
-    alertShown.current = true;
-    console.log("user not logged in");
-    alert("User not logged in");
-    navigate('/login');
+        alertShown.current = true;
+        navigate('/login');
     }
-
-  },[userId, navigate]);
+  }, [userId, navigate]);
   
-
   // Fetch Cart
   useEffect(() => {
+    if (!userId) return; // Don't fetch if no user
     const fetchCart = async () => {
       try {
         const res = await axios.get(`http://localhost:3030/api/cart/${userId}`);
@@ -36,11 +37,35 @@ const Cart = () => {
     fetchCart();
   }, [userId]);
 
+  // ✅ NEW: Update Quantity Function
+  const updateQuantity = async (productId, newQty) => {
+    if (newQty < 1) return; // Prevent going below 1
+
+    // 1. Optimistic UI Update (Update screen instantly)
+    const oldCart = [...cartItems];
+    setCartItems(cartItems.map(item => 
+        item.productId === productId ? { ...item, qty: newQty } : item
+    ));
+
+    try {
+        // 2. Call Backend to save change
+        // Make sure your backend has a route for this! (e.g. PUT /update)
+        await axios.put(`http://localhost:3030/api/cart/update-qty`, {
+            userId,
+            productId,
+            qty: newQty
+        });
+    } catch (err) {
+        console.error("Error updating quantity", err);
+        setCartItems(oldCart); // Revert if server fails
+    }
+  };
+
   // Remove Item
   const removeItem = async (productId) => {
     try {
       await axios.delete(`http://localhost:3030/api/cart/remove/${userId}/${productId}`);
-      setCartItems(cartItems.filter((item) => item.product !== productId));
+      setCartItems(cartItems.filter((item) => item.productId !== productId));
     } catch (err) {
       console.error("Error removing item", err);
     }
@@ -48,7 +73,7 @@ const Cart = () => {
 
   // Calculate Totals
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-  const shipping = subtotal > 1000 ? 0 : 99; // Free shipping over ₹1000
+  const shipping = subtotal > 1000 ? 0 : 99; 
   const total = subtotal + shipping;
 
   return (
@@ -65,8 +90,12 @@ const Cart = () => {
           {cartItems.length === 0 ? (
              <div className="text-gray-500">Your bag is empty. Go add some drip.</div>
           ) : (
-            cartItems.map((item) => (
-              <div key={item.product} className="flex gap-4 p-4 border border-gray-800 rounded-lg bg-[#111] hover:border-[#ccff00] transition-colors">
+            cartItems.map((item, index) => (
+              // ✅ FIX: Use 'item._id' or fallback to 'index' for unique key
+              <div 
+                key={item.productId || index} 
+                className="flex gap-4 p-4 border border-gray-800 rounded-lg bg-[#111] hover:border-[#ccff00] transition-colors"
+              >
                 {/* Image */}
                 <div className="w-24 h-24 bg-gray-800 rounded-md overflow-hidden">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -77,21 +106,31 @@ const Cart = () => {
                   <div>
                     <h3 className="text-lg font-bold">{item.name}</h3>
                     <p className="text-gray-400 text-sm">Size: M</p>
+                    
+                    {/* ✅ FIX: Buttons now work */}
                     <div className="mt-4 flex items-center gap-3">
-                      <button className="p-1 rounded bg-gray-800 hover:bg-white hover:text-black transition">
+                      <button 
+                        onClick={() => updateQuantity(item.productId, item.qty - 1)}
+                        className="p-1 rounded bg-gray-800 hover:bg-white hover:text-black transition"
+                      >
                         <Minus size={14} />
                       </button>
-                      <span className="font-mono">{item.qty}</span>
-                      <button className="p-1 rounded bg-gray-800 hover:bg-white hover:text-black transition">
+                      
+                      <span className="font-mono w-4 text-center">{item.qty}</span>
+                      
+                      <button 
+                        onClick={() => updateQuantity(item.productId, item.qty + 1)}
+                        className="p-1 rounded bg-gray-800 hover:bg-white hover:text-black transition"
+                      >
                         <Plus size={14} />
                       </button>
                     </div>
                   </div>
                   
                   <div className="flex flex-col justify-between items-end">
-                    <p className="text-xl font-bold">₹{item.price}</p>
+                    <p className="text-xl font-bold">₹{item.price * item.qty}</p>
                     <button 
-                      onClick={() => removeItem(item.product)}
+                      onClick={() => removeItem(item.productId)}
                       className="text-gray-500 hover:text-red-500 transition"
                     >
                       <Trash2 size={18} />
@@ -127,7 +166,7 @@ const Cart = () => {
             <span className="text-[#ccff00]">₹{total + (subtotal * 0.18)}</span>
           </div>
 
-          <button className="w-full py-4 bg-[#ccff00] text-black font-bold uppercase tracking-wider hover:bg-[#b3e600] transition flex justify-center items-center gap-2">
+          <button className="w-full py-4 bg-[#ccff00] text-black font-bold uppercase tracking-wider hover:bg-[#b3e600] transition flex justify-center items-center gap-2" onClick={topay}>
             Checkout <ArrowRight size={20} />
           </button>
 

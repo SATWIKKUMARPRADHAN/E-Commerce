@@ -1,29 +1,18 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    description: String,
-    price: {
-        type: Number,
-        required: true
-    },
-    category: {
-        type: String,
-        required: true
-    },
-    stock: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    images: [String],
-    createdAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+    id: { type: Number, required: true, unique: true }, // Keep numeric ID for compatibility with frontend logic if needed, or rely on _id
+    name: { type: String, required: true },
+    category: { type: String, required: true },
+    price: { type: Number, required: true },
+    brand: { type: String, required: true },
+    rating: { type: Number, default: 0 },
+    image: { type: String, required: true },
+    description: { type: String, required: true },
+    originalPrice: { type: Number },
+    discount: { type: Number },
+    reviews: { type: Number, default: 0 },
+    gender: { type: String }
+}, { timestamps: true });
 
-export default mongoose.model('Product', productSchema);
+export default mongoose.model("Product", productSchema);

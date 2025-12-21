@@ -1,27 +1,20 @@
 // All API routes in one file
-// TODO: Replace dummy data with MongoDB queries after connecting database
-
 import express from 'express';
-import User from '../model/User.js';
-import Order from '../model/Order.js';
-import { dummyUsers, dummyProducts, dummyOrders } from '../data.js';
+import { dummyUsers, dummyOrders } from '../data.js'; // product dummy data removed
+import Product from '../model/Product.js';
+// import User from '../model/User.js'; // Uncomment when fully switching User/Order to DB
 
 const router = express.Router();
 
 // Admin Dashboard API
-// GET /api/admin/dashboard
-router.get('/admin/dashboard', (req, res) => {
+router.get('/admin/dashboard', async (req, res) => {
   try {
-    // TODO: Replace with MongoDB queries:
-    // const totalUsers = await User.countDocuments();
-    // const totalOrders = await Order.countDocuments();
-    // const totalProducts = await Product.countDocuments();
-    // const totalRevenue = await Order.aggregate([{ $group: { _id: null, total: { $sum: '$totalAmount' } } }]);
-    // const recentOrders = await Order.find().sort({ createdAt: -1 }).limit(5).populate('userId');
+    const totalUsers = dummyUsers.length; // Keeping dummy for now
+    const totalOrders = dummyOrders.length; // Keeping dummy for now
 
-    const totalUsers = dummyUsers.length;
-    const totalOrders = dummyOrders.length;
-    const totalProducts = dummyProducts.length;
+    // Fetch real product count from DB
+    const totalProducts = await Product.countDocuments();
+
     const totalRevenue = dummyOrders.reduce((sum, order) => sum + order.totalAmount, 0);
     const recentOrders = dummyOrders
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
@@ -46,13 +39,11 @@ router.get('/admin/dashboard', (req, res) => {
   }
 });
 
-// User Profile API
-// GET /api/user/profile/:id
-// User Profile API
-// GET /api/user/profile/:id
-router.get('/user/profile/:id', async (req, res) => {
+// User Profile API (Partial Dummy)
+router.get('/user/profile', (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const userId = '1';
+    const user = dummyUsers.find(u => u._id === userId);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -72,84 +63,21 @@ router.get('/user/profile/:id', async (req, res) => {
   }
 });
 
-// Update User Profile API
-// PUT /api/user/profile/:id
-router.put('/user/profile/:id', async (req, res) => {
+// Order History API (Partial Dummy)
+router.get('/user/orders', (req, res) => {
   try {
-    const { name, email, phone, address } = req.body;
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        email,
-        mobile: phone, // Map phone to mobile
-        address
-      },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json({
-      message: 'Profile updated successfully',
-      user: {
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email
-      }
-    });
-  } catch (error) {
-    console.error("Profile Update Error:", error);
-    res.status(500).json({ error: 'Failed to update profile' });
-  }
-});
-
-// Update User Profile API
-// PUT /api/user/profile/:id
-router.put('/user/profile/:id', async (req, res) => {
-  try {
-    const { name, email, phone, address } = req.body;
-
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        name,
-        email,
-        mobile: phone, // Map phone to mobile
-        address
-      },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    res.json({
-      message: 'Profile updated successfully',
-      user: {
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email
-      }
-    });
-  } catch (error) {
-    console.error("Profile Update Error:", error);
-    res.status(500).json({ error: 'Failed to update profile' });
-  }
-});
-
-// Order History API
-// GET /api/user/orders/:userId
-router.get('/user/orders/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    // Validate userId format if needed, or let mongoose handle it
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const userId = '1';
+    const orders = dummyOrders
+      .filter(order => order.userId === userId)
+      .map(order => ({
+        orderId: order.orderId,
+        products: order.products, // Note: these product references in dummy orders won't match new DB IDs yet, this is fine for now
+        totalAmount: order.totalAmount,
+        paymentMethod: order.paymentMethod,
+        orderStatus: order.orderStatus,
+        createdAt: order.createdAt
+      }))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     res.json(orders);
   } catch (error) {
@@ -158,47 +86,75 @@ router.get('/user/orders/:userId', async (req, res) => {
   }
 });
 
+// --- NEW REAL PRODUCT ROUTES ---
+
+// GET /api/products
+router.get('/products', async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// GET /api/products/:id
+router.get('/products/:id', async (req, res) => {
+  try {
+    // Search by numeric id (custom field) OR _id
+    // Since frontend might send "1", "2", or an ObjectId
+    const { id } = req.params;
+    let product;
+
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      // It's a MongoDB ObjectId
+      product = await Product.findById(id);
+    } else {
+      // It's our numeric custom id
+      product = await Product.findOne({ id: parseInt(id) });
+    }
+
+    if (product) {
+      res.json(product);
+    } else {
+      res.status(404).json({ message: 'Product not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Chatbot API
-// POST /api/chatbot
 router.post('/chatbot', (req, res) => {
   try {
     const { message } = req.body;
-
-    if (!message) {
-      return res.status(400).json({ error: 'Message is required' });
-    }
+    if (!message) return res.status(400).json({ error: 'Message is required' });
 
     const userMessage = message.toLowerCase();
-
-    // Keyword-based intent handling
     let botResponse = '';
     let intent = 'general';
 
     if (userMessage.includes('website') || userMessage.includes('help') || userMessage.includes('how')) {
-      botResponse = 'Our website offers a wide range of products. You can browse categories, view product details, and place orders. Need help with something specific?';
+      botResponse = 'Our website offers a wide range of products. You can browse categories, view product details, and place orders.';
       intent = 'website help';
     } else if (userMessage.includes('product') || userMessage.includes('item') || userMessage.includes('buy')) {
-      botResponse = 'We have various products including electronics, clothing, and footwear. You can search for products using the search bar or browse by category.';
+      botResponse = 'We have various products including electronics, clothing, and footwear. Check out our latest collection!';
       intent = 'product queries';
     } else if (userMessage.includes('order') || userMessage.includes('status') || userMessage.includes('track')) {
-      botResponse = 'You can check your order status in the Order History page. Your orders will show as Pending, Processing, Shipped, or Delivered.';
+      botResponse = 'You can check your order status in the Order History page.';
       intent = 'order status';
     } else if (userMessage.includes('refund') || userMessage.includes('return') || userMessage.includes('cancel')) {
-      botResponse = 'For refunds or returns, please contact our support team. You can reach us via email at support@ecommerce.com or call +1-800-123-4567.';
+      botResponse = 'For refunds or returns, please contact our support team.';
       intent = 'refund / return';
-    } else if (userMessage.includes('contact') || userMessage.includes('support') || userMessage.includes('help')) {
-      botResponse = 'Our customer support team is available 24/7. Email: support@ecommerce.com | Phone: +1-800-123-4567 | Live chat available on weekdays 9 AM - 6 PM.';
+    } else if (userMessage.includes('contact') || userMessage.includes('support')) {
+      botResponse = 'Our customer support team is available 24/7 at support@ecommerce.com.';
       intent = 'contact support';
     } else {
-      botResponse = 'I\'m here to help! You can ask me about products, orders, returns, or contact information. How can I assist you today?';
+      botResponse = 'I\'m here to help! specific queries about products or orders work best.';
       intent = 'general';
     }
 
-    res.json({
-      response: botResponse,
-      intent,
-      timestamp: new Date().toISOString()
-    });
+    res.json({ response: botResponse, intent, timestamp: new Date().toISOString() });
   } catch (error) {
     res.status(500).json({ error: 'Failed to process chatbot message' });
   }

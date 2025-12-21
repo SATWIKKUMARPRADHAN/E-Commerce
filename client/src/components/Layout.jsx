@@ -1,75 +1,64 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { UserRound, Search, Heart, ShoppingBag, LogOut } from 'lucide-react';
-import ChatbotWidget from './ChatbotWidget.jsx'; // Satwik's Chatbot
-import './Layout.css'; // Keep Satwik's CSS for the general layout structure
+import ChatbotWidget from './ChatbotWidget.jsx'; 
+import './Layout.css'; 
+import { useAuth } from '../context/AuthContext.jsx'; 
 
 function Layout({ children }) {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const [user, setUser] = React.useState(JSON.parse(localStorage.getItem('user')));
-
-  React.useEffect(() => {
-    const handleStorageChange = () => {
-      setUser(JSON.parse(localStorage.getItem('user')));
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  // Get user and logout function directly from Context
+  const { isLoggedIn, user, logout } = useAuth(); 
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    setUser(null);
-    window.location.href = '/login';
+    logout(); // Updates context state
+    navigate('/login'); // Redirects user
   };
 
   return (
     <div className="layout">
-
-      {/* --- SHALINI'S NAVBAR DESIGN (Replacing Satwik's generic nav) --- */}
+      
+      
       <div
         className="container-fluid text-white"
         style={{
-          position: 'absolute', // Your glass effect positioning
+          position: 'fixed', 
           top: 0,
           left: 0,
           width: '100%',
           backdropFilter: 'blur(10px)',
-          background: 'rgba(0,0,0,0.4)',
+          background: 'rgba(0,0,0,0.6)', 
           zIndex: 1000,
           borderBottom: '1px solid rgba(255,255,255,0.1)'
         }}
       >
         <div className="row">
-          <nav className="d-flex align-items-center justify-content-between p-3">
-
-            {/* Left: Logo & Main Links */}
-            <div className="d-flex align-items-center gap-4">
-              {/* Logo */}
-              <Link to="/" style={{ textDecoration: 'none', color: 'white' }} className="fw-bold fs-4 m-0">
+          <nav className="d-flex align-items-center justify-content-between p-3 px-4">
+            
+            {/* 1. LEFT: Logo & Main Links */}
+            <div className="d-flex align-items-center gap-5">
+              <Link to="/" className="text-decoration-none text-white fw-black fs-4 tracking-tighter">
                 🛍️ HYPERRUSH
               </Link>
-
-              {/* Satwik's Links integrated into your style */}
-              <div className="d-none d-md-flex gap-3">
-                <Link to="/" className="text-white text-decoration-none small hover-opacity">Home</Link>
-                <Link to="/products" className="text-white text-decoration-none small hover-opacity">Products</Link>
+              
+              <div className="d-none d-md-flex gap-4">
+                <Link to="/" className="text-gray-300 text-decoration-none small text-uppercase fw-bold hover-text-white">Home</Link>
+                <Link to="/products" className="text-gray-300 text-decoration-none small text-uppercase fw-bold hover-text-white">Products</Link>
               </div>
             </div>
 
-
+            {/* 2. CENTER: Search Bar (Desktop) */}
             <div
               className="d-none d-md-flex align-items-center"
               style={{
-                border: '1px solid rgba(255,255,255,0.3)',
-                padding: '6px 20px',
-                borderRadius: '20px',
-                gap: '10px',
-                background: 'rgba(255,255,255,0.1)'
+                border: '1px solid rgba(255,255,255,0.2)',
+                padding: '8px 20px',
+                borderRadius: '50px',
+                background: 'rgba(255,255,255,0.05)',
+                width: '350px'
               }}
             >
-              <Search size={18} color="white" />
+              <Search size={18} className="text-gray-400" />
               <input
                 type="text"
                 placeholder="Search drops..."
@@ -78,62 +67,73 @@ function Layout({ children }) {
                   color: 'white',
                   border: 'none',
                   outline: 'none',
-                  minWidth: '200px'
+                  marginLeft: '10px',
+                  width: '100%'
                 }}
               />
             </div>
 
-            {/* Right: Icons & User Actions */}
-            <div className="d-flex align-items-center fw-bold mr-6" style={{ gap: '20px' }}>
+            {/* 3. RIGHT: Icons & User Actions */}
+            <div className="d-flex align-items-center gap-4">
+              
+              {/* Wishlist */}
+              <Link to="/wishlist" className="text-white hover-opacity" title="Wishlist">
+                <Heart size={22} />
+              </Link>
 
-              {user ? (
-                <div className="d-flex align-items-center gap-4">
+              {/* Cart */}
+              <Link to="/cart" className="text-white hover-opacity position-relative" title="Cart">
+                <ShoppingBag size={22} />
+                {/* Optional Badge */}
+                {/* <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-pink-500" style={{fontSize: '0.6rem'}}>2</span> */}
+              </Link>
 
-                  {/* will be on user profile page */}
-                  {/* will be on user profile page */}
+              <div className="vr bg-white opacity-25 mx-2" style={{height: '25px'}}></div>
 
-                  <span className="small text-warning">Hi, {user.name.split(' ')[0]}</span>
+              {/* AUTH SECTION */}
+              {isLoggedIn ? (
+                // ✅ LOGGED IN VIEW
+                <div className="d-flex align-items-center gap-3">
+                  {/* Profile Link */}
+                  <Link to="/profile" className="d-flex align-items-center gap-2 text-decoration-none text-white hover-opacity">
+                    <UserRound size={22} />
+                    {/* Show Name only on Desktop */}
+                    <span className="d-none d-lg-block small fw-bold text-uppercase">
+                      {user?.name?.split(' ')[0] || 'User'}
+                    </span>
+                  </Link>
 
-                  <button
+                  {/* Logout Button */}
+                  <button 
                     onClick={handleLogout}
-                    style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
+                    className="btn btn-link text-white p-0 hover-text-pink"
                     title="Logout"
                   >
                     <LogOut size={20} />
                   </button>
                 </div>
               ) : (
-                <Link to="/login" style={{ color: 'white' }}>
-                  <UserRound size={22} />
+                // ❌ LOGGED OUT VIEW
+                <Link 
+                  to="/login" 
+                  className="btn btn-sm btn-light rounded-pill fw-bold px-4"
+                  style={{ fontSize: '14px' }}
+                >
+                  Login
                 </Link>
               )}
 
-              <Link to="/wishlist" style={{ background: 'none', border: 'none', color: 'white' }}>
-                <Heart size={22} />
-              </Link>
-
-              <Link to="/cart" style={{ background: 'none', border: 'none', color: 'white', position: 'relative' }}>
-                <ShoppingBag size={22} />
-                {/* Optional: Add a badge here later if you want */}
-              </Link>
-
-              <Link to="/Profile" style={{ background: 'none', border: 'none', color: 'white', position: 'relative' }}>
-                <UserRound size={22} />
-                {/* Optional: Add a badge here later if you want */}
-              </Link>
             </div>
 
           </nav>
         </div>
       </div>
-
-
-      {/* Added paddingTop so your absolute navbar doesn't cover the content */}
-      <main className="main-content" style={{ minHeight: '100vh', paddingTop: '80px', background: '#0a0a0a' }}>
+      
+      {/* Main Content Area */}
+      <main style={{ paddingTop: '85px', minHeight: '100vh', background: '#0a0a0a' }}>
         {children}
       </main>
 
-      {/* Floating Chatbot Widget */}
       <ChatbotWidget />
     </div>
   );
