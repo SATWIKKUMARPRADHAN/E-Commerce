@@ -28,6 +28,7 @@ import Help from './footerComponents/Help.jsx';
 import EarnWithUs from './footerComponents/EarnWithUs.jsx';
 import PrivacyPolicy from './footerComponents/PrivacyPolicy.jsx';
 import TermsOfService from './footerComponents/TermsOfService.jsx';
+import Checkout from './pages/Checkout.jsx';
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
             
             <Route path="/order-track" element={<OrderTracking />} />
             <Route path="/payment" element={<Payment />}  />
+            <Route path='/checkout' element={<Checkout />} />
 
             {/* footer element added by Shalini */}
             <Route path='/aboutUs' element={<AboutUs />} />
