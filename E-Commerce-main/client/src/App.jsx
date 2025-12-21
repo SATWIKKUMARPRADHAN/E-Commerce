@@ -7,7 +7,6 @@ import ProductDetail from './pages/ProductDetail.jsx';
 import Wishlist from './pages/Wishlist.jsx';
 import Admin from './pages/Admin.jsx';
 import Profile from './pages/Profile.jsx';
-import Orders from './pages/Orders.jsx';
 import './App.css';
 //add by shalini 
 import React from 'react'
@@ -32,8 +31,6 @@ function App() {
 
           {/* User account pages - Satwik's work */}
           <Route path="/profile" element={<Profile />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/orders/:id" element={<PlaceholderPage title="Order Tracking" message="Order tracking page will be created by Shalini" />} />
 
           {/* Admin page - Satwik's work */}
           <Route path="/admin" element={<Admin />} />

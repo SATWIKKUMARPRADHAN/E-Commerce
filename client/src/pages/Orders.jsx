@@ -10,14 +10,21 @@ function Orders() {
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState('all'); // all, pending, processing, shipped, delivered
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem('user')));
 
-  const fetchOrders = async () => {
+  useEffect(() => {
+    if (currentUser && currentUser._id) {
+      fetchOrders(currentUser._id);
+    } else {
+      setLoading(false);
+      // Maybe redirect or show empty state if not logged in, but for now just stop loading
+    }
+  }, [currentUser]);
+
+  const fetchOrders = async (userId) => {
     try {
       setLoading(true);
-      const data = await getUserOrders();
+      const data = await getUserOrders(userId);
       setOrders(data);
       setError(null);
     } catch (err) {
@@ -27,9 +34,11 @@ function Orders() {
     }
   };
 
-  const filteredOrders = filter === 'all' 
-    ? orders 
-    : orders.filter(order => order.orderStatus.toLowerCase() === filter.toLowerCase());
+  const filteredOrders = Array.isArray(orders) && filter === 'all'
+    ? orders
+    : Array.isArray(orders)
+      ? orders.filter(order => order?.orderStatus?.toLowerCase() === filter.toLowerCase())
+      : [];
 
   if (loading) {
     return (
@@ -53,31 +62,31 @@ function Orders() {
       <div className="orders-header">
         <h1>My Orders</h1>
         <div className="orders-filters">
-          <button 
+          <button
             className={filter === 'all' ? 'filter-btn active' : 'filter-btn'}
             onClick={() => setFilter('all')}
           >
             All Orders
           </button>
-          <button 
+          <button
             className={filter === 'pending' ? 'filter-btn active' : 'filter-btn'}
             onClick={() => setFilter('pending')}
           >
             Pending
           </button>
-          <button 
+          <button
             className={filter === 'processing' ? 'filter-btn active' : 'filter-btn'}
             onClick={() => setFilter('processing')}
           >
             Processing
           </button>
-          <button 
+          <button
             className={filter === 'shipped' ? 'filter-btn active' : 'filter-btn'}
             onClick={() => setFilter('shipped')}
           >
             Shipped
           </button>
-          <button 
+          <button
             className={filter === 'delivered' ? 'filter-btn active' : 'filter-btn'}
             onClick={() => setFilter('delivered')}
           >
@@ -90,8 +99,8 @@ function Orders() {
         <div className="no-orders">
           <div className="no-orders-icon">📦</div>
           <h2>No orders found</h2>
-          <p>{filter === 'all' 
-            ? "You haven't placed any orders yet. Start shopping to see your orders here!" 
+          <p>{filter === 'all'
+            ? "You haven't placed any orders yet. Start shopping to see your orders here!"
             : `No ${filter} orders found.`}
           </p>
           {filter === 'all' && (
@@ -124,7 +133,7 @@ function Orders() {
                   <p className="order-total">${order.totalAmount.toFixed(2)}</p>
                 </div>
               </div>
-              
+
               <div className="order-products">
                 <h4>Items ({order.products.length})</h4>
                 <div className="products-list">
@@ -137,15 +146,15 @@ function Orders() {
                   ))}
                 </div>
               </div>
-              
+
               <div className="order-footer">
                 <div className="order-payment">
                   <span className="payment-label">Payment Method:</span>
                   <span className="payment-method">{order.paymentMethod}</span>
                 </div>
                 <div className="order-actions">
-                  <Link 
-                    to={`/orders/${order.orderId}`} 
+                  <Link
+                    to={`/orders/${order.orderId}`}
                     className="track-order-btn"
                   >
                     Track Order

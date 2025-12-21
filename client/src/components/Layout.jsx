@@ -8,18 +8,25 @@ function Layout({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- SHALINI'S AUTH LOGIC ---
-  // Using real data instead of placeholders
-  const user = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = React.useState(JSON.parse(localStorage.getItem('user')));
+
+  React.useEffect(() => {
+    const handleStorageChange = () => {
+      setUser(JSON.parse(localStorage.getItem('user')));
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('user');
+    setUser(null);
     window.location.href = '/login';
   };
 
   return (
     <div className="layout">
-      
+
       {/* --- SHALINI'S NAVBAR DESIGN (Replacing Satwik's generic nav) --- */}
       <div
         className="container-fluid text-white"
@@ -36,14 +43,14 @@ function Layout({ children }) {
       >
         <div className="row">
           <nav className="d-flex align-items-center justify-content-between p-3">
-            
+
             {/* Left: Logo & Main Links */}
             <div className="d-flex align-items-center gap-4">
               {/* Logo */}
               <Link to="/" style={{ textDecoration: 'none', color: 'white' }} className="fw-bold fs-4 m-0">
                 🛍️ HYPERRUSH
               </Link>
-              
+
               {/* Satwik's Links integrated into your style */}
               <div className="d-none d-md-flex gap-3">
                 <Link to="/" className="text-white text-decoration-none small hover-opacity">Home</Link>
@@ -51,7 +58,7 @@ function Layout({ children }) {
               </div>
             </div>
 
-            
+
             <div
               className="d-none d-md-flex align-items-center"
               style={{
@@ -78,17 +85,17 @@ function Layout({ children }) {
 
             {/* Right: Icons & User Actions */}
             <div className="d-flex align-items-center fw-bold mr-6" style={{ gap: '20px' }}>
-              
+
               {user ? (
                 <div className="d-flex align-items-center gap-4">
-                  
+
                   {/* will be on user profile page */}
-                  {/* <Link to="/orders" className="text-white text-decoration-none small" style={{opacity: 0.8}}>Orders</Link> */}
-                  
+                  {/* will be on user profile page */}
+
                   <span className="small text-warning">Hi, {user.name.split(' ')[0]}</span>
-                  
-                  <button 
-                    onClick={handleLogout} 
+
+                  <button
+                    onClick={handleLogout}
                     style={{ background: 'none', border: 'none', color: 'white', cursor: 'pointer' }}
                     title="Logout"
                   >
@@ -111,7 +118,7 @@ function Layout({ children }) {
               </Link>
 
               <Link to="/Profile" style={{ background: 'none', border: 'none', color: 'white', position: 'relative' }}>
-                <UserRound  size={22} />
+                <UserRound size={22} />
                 {/* Optional: Add a badge here later if you want */}
               </Link>
             </div>
@@ -120,7 +127,7 @@ function Layout({ children }) {
         </div>
       </div>
 
-      
+
       {/* Added paddingTop so your absolute navbar doesn't cover the content */}
       <main className="main-content" style={{ minHeight: '100vh', paddingTop: '80px', background: '#0a0a0a' }}>
         {children}

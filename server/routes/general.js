@@ -2,6 +2,8 @@
 // TODO: Replace dummy data with MongoDB queries after connecting database
 
 import express from 'express';
+import User from '../model/User.js';
+import Order from '../model/Order.js';
 import { dummyUsers, dummyProducts, dummyOrders } from '../data.js';
 
 const router = express.Router();
@@ -45,16 +47,12 @@ router.get('/admin/dashboard', (req, res) => {
 });
 
 // User Profile API
-// GET /api/user/profile
-// TODO: Use real userId from authentication token
-router.get('/user/profile', (req, res) => {
+// GET /api/user/profile/:id
+// User Profile API
+// GET /api/user/profile/:id
+router.get('/user/profile/:id', async (req, res) => {
   try {
-    // TODO: Replace with MongoDB query:
-    // const userId = req.user.id; // from authentication middleware
-    // const user = await User.findById(userId);
-
-    const userId = '1'; // Dummy userId - replace with actual auth
-    const user = dummyUsers.find(u => u._id === userId);
+    const user = await User.findById(req.params.id);
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -63,40 +61,99 @@ router.get('/user/profile', (req, res) => {
     res.json({
       name: user.name,
       email: user.email,
-      phone: user.phone,
-      address: user.address,
+      phone: user.mobile,
+      address: user.address || {},
       createdAt: user.createdAt,
-      lastLogin: user.lastLogin
+      lastLogin: user.updatedAt // Using updatedAt as proxy for now
     });
   } catch (error) {
+    console.error("Profile Fetch Error:", error);
     res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 });
 
-// Order History API
-// GET /api/user/orders
-// TODO: Use real userId from authentication token
-router.get('/user/orders', (req, res) => {
+// Update User Profile API
+// PUT /api/user/profile/:id
+router.put('/user/profile/:id', async (req, res) => {
   try {
-    // TODO: Replace with MongoDB query:
-    // const userId = req.user.id; // from authentication middleware
-    // const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    const { name, email, phone, address } = req.body;
 
-    const userId = '1'; // Dummy userId - replace with actual auth
-    const orders = dummyOrders
-      .filter(order => order.userId === userId)
-      .map(order => ({
-        orderId: order.orderId,
-        products: order.products,
-        totalAmount: order.totalAmount,
-        paymentMethod: order.paymentMethod,
-        orderStatus: order.orderStatus,
-        createdAt: order.createdAt
-      }))
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        email,
+        mobile: phone, // Map phone to mobile
+        address
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email
+      }
+    });
+  } catch (error) {
+    console.error("Profile Update Error:", error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Update User Profile API
+// PUT /api/user/profile/:id
+router.put('/user/profile/:id', async (req, res) => {
+  try {
+    const { name, email, phone, address } = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name,
+        email,
+        mobile: phone, // Map phone to mobile
+        address
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      message: 'Profile updated successfully',
+      user: {
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email
+      }
+    });
+  } catch (error) {
+    console.error("Profile Update Error:", error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+// Order History API
+// GET /api/user/orders/:userId
+router.get('/user/orders/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Validate userId format if needed, or let mongoose handle it
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
 
     res.json(orders);
   } catch (error) {
+    console.error("Fetch Orders Error:", error);
     res.status(500).json({ error: 'Failed to fetch orders' });
   }
 });

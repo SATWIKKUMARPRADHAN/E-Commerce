@@ -1,7 +1,7 @@
 // Axios configuration for API calls
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:3030/api';
 
 // Create axios instance with base URL
 const api = axios.create({
@@ -10,6 +10,25 @@ const api = axios.create({
     'Content-Type': 'application/json'
   }
 });
+
+// Auth APIs
+export const login = async (credentials) => {
+  try {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Login failed');
+  }
+};
+
+export const signup = async (userData) => {
+  try {
+    const response = await api.post('/auth/signup', userData);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Signup failed');
+  }
+};
 
 // Admin Dashboard API
 export const getAdminDashboard = async () => {
@@ -22,19 +41,29 @@ export const getAdminDashboard = async () => {
 };
 
 // User Profile API
-export const getUserProfile = async () => {
+// User Profile API
+export const getUserProfile = async (userId) => {
   try {
-    const response = await api.get('/user/profile');
+    const response = await api.get(`/user/profile/${userId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || 'Failed to fetch user profile');
   }
 };
 
-// Order History API
-export const getUserOrders = async () => {
+export const updateUserProfile = async (userId, data) => {
   try {
-    const response = await api.get('/user/orders');
+    const response = await api.put(`/user/profile/${userId}`, data);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || 'Failed to update profile');
+  }
+};
+
+// Order History API
+export const getUserOrders = async (userId) => {
+  try {
+    const response = await api.get(`/user/orders/${userId}`);
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || 'Failed to fetch orders');
