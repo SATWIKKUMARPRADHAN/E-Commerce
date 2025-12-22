@@ -38,7 +38,7 @@ function Layout({ children }) {
             {/* 1. LEFT: Logo & Main Links */}
             <div className="d-flex align-items-center gap-5">
               <Link to="/" className="text-decoration-none text-white fw-black fs-4 tracking-tighter">
-                🛍️ HYPERRUSH
+                <span className="text-stroke" style={{ letterSpacing: '2px' }}>🛍️ HYPERRUSH</span>
               </Link>
               
               <div className="d-none d-md-flex gap-4">
