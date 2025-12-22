@@ -26,10 +26,6 @@ app.use(cors({
 }));
 
 
-//connection to database
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected successfully to:", mongoose.connection.name))
-    .catch((error) => console.error("DB connection error:", error.message));
 
 // Routes
 app.use('/api', generalRoutes);
@@ -96,11 +92,24 @@ app.get('/health', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`API endpoints available at http://localhost:${PORT}/api`);
+// ... imports and middleware remain the same ...
 
-    // Uncomment when MongoDB is ready:
-    // connectDB();
-});
+
+
+// Connect to DB FIRST, then start server
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {
+        console.log("MongoDB connected successfully to:", mongoose.connection.name);
+        
+        // ONLY start the server if DB connects
+        app.listen(PORT, () => {
+            console.log(`Server running on http://localhost:${PORT}`);
+            console.log(`API endpoints available at http://localhost:${PORT}/api`);
+        });
+    })
+    .catch((error) => {
+        console.error("CRITICAL DB ERROR:", error.message);
+        // Ensure the process stops if DB fails
+        process.exit(1);
+    });
 

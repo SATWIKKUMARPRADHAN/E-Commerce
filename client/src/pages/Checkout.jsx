@@ -127,7 +127,7 @@ const Checkout = () => {
                     {/* Left side: Forms */}
                     <div className="lg:col-span-2 space-y-8">
                         <section className="checkout-section">
-                            <h2 className="flex items-center gap-3 text-2xl font-display uppercase tracking-tight mb-6">
+                            <h2 className="flex items-center gap-3 text-2xl font-display uppercase tracking-tight mb-6 text-[#C6AC8F]">
                                 <Truck className="text-[#ccff00]" /> Shipping Details
                             </h2>
                             <form className="space-y-6">
@@ -199,7 +199,7 @@ const Checkout = () => {
                         </section>
 
                         <section className="checkout-section">
-                            <h2 className="flex items-center gap-3 text-2xl font-display uppercase tracking-tight mb-6">
+                            <h2 className="flex items-center gap-3 text-2xl text-[#C6AC8F] font-display uppercase tracking-tight mb-6">
                                 <CreditCard className="text-[#ccff00]" /> Payment Method
                             </h2>
                             <div className="payment-options">
@@ -230,7 +230,7 @@ const Checkout = () => {
                     {/* Right side: Order Summary */}
                     <div className="lg:col-span-1">
                         <aside className="order-summary-card">
-                            <h2 className="flex items-center gap-3 text-xl font-display uppercase border-b border-gray-800 pb-4 mb-6">
+                            <h2 className="flex items-center gap-3 text-xl font-display uppercase border-b border-gray-800 text-[#C6AC8F] pb-4 mb-6">
                                 <ShoppingBag size={20} className="text-[#ccff00]" /> Order Summary
                             </h2>
 
