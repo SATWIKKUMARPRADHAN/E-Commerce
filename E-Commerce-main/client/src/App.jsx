@@ -59,6 +59,7 @@ function PlaceholderPage({ title, message }) {
         <p className="placeholder-note">This page is being developed by another team member.</p>
       </div>
     </div>
+    
   );
 }
 

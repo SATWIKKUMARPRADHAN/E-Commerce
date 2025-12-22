@@ -6,6 +6,7 @@ import Profile from './pages/Profile.jsx';
 import Orders from './pages/Orders.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import './App.css';
+import Home from './pages/Home.jsx';
 
 // add by priyanshu
 import ProductListing from './pages/ProductListing.jsx';
@@ -75,6 +76,7 @@ function App() {
             <Route path='/cart' element={<Cart />} />
             <Route path="/checkout" element={<PlaceholderPage title="Checkout" message="Checkout page will be created by Shalini" />} />
           </Routes>
+          <Footer />
         </Layout>
       </Router>
     </AuthProvider>
@@ -82,66 +84,7 @@ function App() {
 }
 
 // Enhanced Home Component (will be replaced by Priyanshu)
-function Home() {
-  return (
-    <div className="home-container">
-      <div className="home-hero">
-        <h1>Welcome to HYPERRUSH</h1>
-        <p>Discover amazing products at unbeatable prices</p>
-        <div className="home-cta">
-          <a href="/products" className="cta-button cta-primary">Shop Now</a>
-          <a href="/products" className="cta-button cta-secondary">Browse Products</a>
-        </div>
-      </div>
 
-      <div className="home-stats">
-        <h2>Why Choose Us?</h2>
-        <div className="stats-grid">
-          <div className="stat-item">
-            <span className="stat-number">10K+</span>
-            <span className="stat-label">Happy Customers</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">5K+</span>
-            <span className="stat-label">Products Available</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">24/7</span>
-            <span className="stat-label">Customer Support</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">100%</span>
-            <span className="stat-label">Secure Payment</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="home-features">
-        <div className="feature-card">
-          <span className="feature-icon">🛍️</span>
-          <h3>Browse Products</h3>
-          <p>Explore our wide range of high-quality products across multiple categories</p>
-        </div>
-        <div className="feature-card">
-          <span className="feature-icon">❤️</span>
-          <h3>Wishlist</h3>
-          <p>Save your favorite items for later and never miss a deal</p>
-        </div>
-        <div className="feature-card">
-          <span className="feature-icon">🛒</span>
-          <h3>Easy Shopping</h3>
-          <p>Simple checkout process with secure payment options</p>
-        </div>
-        <div className="feature-card">
-          <span className="feature-icon">📦</span>
-          <h3>Fast Delivery</h3>
-          <p>Track your orders in real-time with our reliable delivery service</p>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-}
 
 // Placeholder component for pages created by other teammates
 function PlaceholderPage({ title, message }) {
@@ -152,6 +95,7 @@ function PlaceholderPage({ title, message }) {
         <p>{message}</p>
         <p className="placeholder-note">This page is being developed by another team member.</p>
       </div>
+      
     </div>
   );
 }

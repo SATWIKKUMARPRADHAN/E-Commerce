@@ -34,15 +34,16 @@ const Wishlist = () => {
     };
 
     return (
-        <div className="wishlist-container">
+        <div className="wishlist-container m-4">
             <div className="wishlist-header">
-                <h1>My Wishlist</h1>
-                {wishlistItems.length > 0 && (
-                    <button className="btn btn-outline btn-sm" onClick={clearWishlist}>
-                        Clear Wishlist
-                    </button>
-                )}
-            </div>
+            <h1><span style={{color: 'var(--neon-green)', fontSize: '2rem'}}>//</span> YOUR STASH</h1>
+            
+            {wishlistItems.length > 0 && (
+                <button className="btn btn-outline" onClick={clearWishlist}>
+                    CLEAR ALL ✖
+                </button>
+            )}
+        </div>
 
             {wishlistItems.length > 0 ? (
                 <div className="products-grid">

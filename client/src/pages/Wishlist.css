@@ -51,3 +51,71 @@
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
 }
+
+/* --- Edgy Header Container --- */
+.wishlist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  border-bottom: 2px solid #333; /* Dark divider */
+  position: relative;
+}
+
+/* Add a neon underline effect */
+.wishlist-header::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100px; /* Short accented line */
+  height: 2px;
+  background: var(--neon-green, #ccff00); /* Fallback if variable missing */
+  box-shadow: 0 0 10px var(--neon-green, #ccff00);
+}
+
+/* --- The Title (H1) --- */
+.wishlist-header h1 {
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-style: italic;
+  letter-spacing: -2px;
+  margin: 0;
+  color: white;
+  /* The "Edgy" text stroke effect */
+  -webkit-text-stroke: 1px white; 
+  color: transparent; 
+  transition: 0.3s;
+}
+
+.wishlist-header h1:hover {
+  color: white;
+  text-shadow: 5px 5px 0px rgba(255, 255, 255, 0.2);
+}
+
+/* --- The Edgy Button --- */
+.wishlist-header .btn-outline {
+  background: transparent;
+  color: #ff0055; /* Hot pink/Red for "Clear" action */
+  border: 1px solid #ff0055;
+  padding: 10px 25px;
+  font-family: monospace;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  /* THIS MAKES IT EDGY (Literally) */
+  clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+}
+
+.wishlist-header .btn-outline:hover {
+  background: #ff0055;
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 0, 85, 0.6);
+  transform: scale(1.05);
+}

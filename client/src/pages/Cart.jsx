@@ -79,7 +79,7 @@ const Cart = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white pt-24 px-4 md:px-10 font-body">
       
-      <h1 className="text-4xl font-display uppercase tracking-tighter mb-8">
+      <h1 className="text-4xl font-display uppercase tracking-tighter mb-8 text-[#C6AC8F]">
         Your Bag <span className="text-[#ccff00]">({cartItems.length})</span>
       </h1>
 
@@ -144,7 +144,7 @@ const Cart = () => {
 
         {/* Right: Order Summary */}
         <div className="w-full lg:w-96 h-fit bg-[#111] p-6 border border-gray-800 rounded-lg sticky top-28">
-          <h2 className="text-xl font-display uppercase mb-4 border-b border-gray-800 pb-2">Order Summary</h2>
+          <h2 className="text-xl font-display uppercase mb-4 border-b border-gray-800 pb-2 text-[#ded1b6]">Order Summary</h2>
           
           <div className="space-y-3 text-gray-400 mb-6">
             <div className="flex justify-between">
