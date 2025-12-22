@@ -93,10 +93,32 @@ router.get('/products/:id', async (req, res) => {
   }
 });
 
-// --- CHATBOT (Kept as is) ---
-router.post('/chatbot', (req, res) => {
-    // ... your existing chatbot code ...
-    res.json({ response: "Bot active", timestamp: new Date() });
-});
+//chatbot route
+router.post('/chatbot', async (req, res) => {
+    const { message } = req.body;
+    
+    // 1. Basic Logic (Replace this with AI or Database logic later)
+    let botResponse = "I'm not sure about that. Try asking about 'tracking' or 'returns'.";
+    
+    const lowerMsg = message.toLowerCase();
 
+    if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
+        botResponse = "Hello! Welcome to our store. How can I help you with your style today?";
+    } 
+    else if (lowerMsg.includes('track') || lowerMsg.includes('order')) {
+        botResponse = "To track your order, go to your Profile > Orders page.";
+    } 
+    else if (lowerMsg.includes('return') || lowerMsg.includes('refund')) {
+        botResponse = "We accept returns within 7 days. Please keep the tags intact!";
+    }
+    else if (lowerMsg.includes('product') || lowerMsg.includes('buy')) {
+        botResponse = "Check out our 'Featured' section on the homepage for the latest drops!";
+    }
+
+    // 2. Return the dynamic response
+    res.json({ 
+        response: botResponse, 
+        timestamp: new Date().toISOString() 
+    });
+});
 export default router;

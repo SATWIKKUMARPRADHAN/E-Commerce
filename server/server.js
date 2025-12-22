@@ -12,6 +12,7 @@ import orderRoutes from './routes/order.js';
 
 import track from './routes/track.js';
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs'
 // import { connectDB } from './db.js'; // Uncomment when MongoDB is ready
 
 dotenv.config();
@@ -45,8 +46,13 @@ app.post('/api/auth/signup', async (req, res) => {
         if (existUser) {
             return res.status(400).json({ message: "user already exist" });
         }
+        
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword  = await bcrypt.hash(password, salt);
+
+
         //create new user
-        const newUser = await User.create({ name, mobile, email, password });
+        const newUser = await User.create({ name, mobile, email, password: hashedPassword });
         res.status(201).json({
             message: "user registered successfully",
             user: newUser
@@ -65,7 +71,11 @@ app.post('/api/auth/login', async (req, res) => {
 
         const user = await User.findOne({ email });
 
-        if (!user || user.password !== password) {
+        if (!user) {
+            return res.status(401).json({ message: "Invalid email or password" });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
             return res.status(401).json({ message: "Invalid email or password" });
         }
         res.json({
