@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Direct connection to backend (proxy not working)
-const API_BASE_URL = 'http://localhost:3030/api';
+const API_BASE_URL = 'https://e-commerce-esxl.onrender.com/api';
 
 // Create axios instance with base URL
 const api = axios.create({
