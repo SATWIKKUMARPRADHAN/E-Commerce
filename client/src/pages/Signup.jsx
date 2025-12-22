@@ -70,7 +70,7 @@ export default function Signup() {
         }
         catch (err) {
             console.error(err);
-            setError(`signup failed, Server might be down`);
+            setError(`signup failed, user may already exist. Please try again later`);
         }
 
     }

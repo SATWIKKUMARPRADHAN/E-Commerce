@@ -51,7 +51,7 @@ export default function Login() {
     }
     catch (err) {
       console.log(err);
-      setError('login failed. Please try again later');
+      setError('login failed, please check your credentials' );
     }
   }
 
